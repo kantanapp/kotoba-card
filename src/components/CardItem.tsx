@@ -46,8 +46,8 @@ export function CardItem({ card, lang, isOpen, slot, onTap }: Props) {
         </div>
       )}
 
-      {/* Image area */}
-      <div className="w-full aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+      {/* Image area — flex-1 so it fills available height */}
+      <div className="w-full flex-1 min-h-0 bg-gray-50 flex items-center justify-center overflow-hidden">
         {card.imageData ? (
           <img
             src={card.imageData}
@@ -67,19 +67,9 @@ export function CardItem({ card, lang, isOpen, slot, onTap }: Props) {
         </span>
       </div>
 
-      {/* Speaking indicator overlay */}
+      {/* Speaking indicator overlay — pulse instead of bounce */}
       {isOpen && (
-        <div className="absolute inset-0 bg-sky-500/10 border-4 border-sky-400 rounded-2xl pointer-events-none">
-          <div className="absolute top-2 right-2 flex gap-0.5 items-end h-5">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="w-1.5 bg-sky-500 rounded-full animate-bounce"
-                style={{ height: `${8 + i * 4}px`, animationDelay: `${i * 0.1}s` }}
-              />
-            ))}
-          </div>
-        </div>
+        <div className="absolute inset-0 bg-sky-500/10 border-4 border-sky-400 rounded-2xl pointer-events-none animate-pulse" />
       )}
     </button>
   )

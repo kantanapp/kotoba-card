@@ -120,8 +120,8 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-svh bg-sky-50">
 
-      {/* Cards fill the viewport — footer padding prevents overlap */}
-      <main className="flex-1 pb-[60px]">
+      {/* Cards fill the viewport exactly — fixed height, no scroll */}
+      <main className="h-[calc(100svh-60px)] overflow-hidden">
         <CardGrid
           cards={visibleCards}
           lang={lang}
