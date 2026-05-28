@@ -53,8 +53,8 @@ db.on('populate', async () => {
     { name: 'study_wakaru_boy', textJa: 'べんきょう' },
     { name: 'kids_hakusen', textJa: 'いってきます' },
     { name: 'shower_man', textJa: 'おふろ' },
-    // hanko_taihenyokudekimashita (がんばった) — 画像未追加
-    // tamashii_nukeru_man (つかれた) — 画像未追加
+    { name: 'hanko_taihenyokudekimashita', textJa: 'がんばった' },
+    { name: 'tamashii_nukeru_man', textJa: 'つかれた' },
   ]
   await db.cards.bulkAdd(
     sampleCards.map((s, i) => ({
