@@ -9,6 +9,7 @@ import { useCards, type Card } from './hooks/useCards'
 import { useCategories } from './hooks/useCategories'
 import { useTTS, type Lang } from './hooks/useTTS'
 import { useAppTitle } from './hooks/useAppTitle'
+import { useMediaQuery } from './hooks/useMediaQuery'
 
 export default function App() {
   const [lang, setLang] = useState<Lang>('ja')
@@ -26,8 +27,9 @@ export default function App() {
   const [slot1Id, setSlot1Id] = useState<string | null>(null)
   const [slot2Id, setSlot2Id] = useState<string | null>(null)
 
-  // ページネーション
-  const PAGE_SIZE = 8
+  // ページネーション（スマホ: 2×2=4枚、タブレット以上: 4×2=8枚）
+  const isTablet = useMediaQuery('(min-width: 768px)')
+  const PAGE_SIZE = isTablet ? 8 : 4
   const [currentPage, setCurrentPage] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
 
