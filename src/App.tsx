@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState, useMemo, useEffect } from 'react'
 import { Header } from './components/Header'
 import { CategoryTabs } from './components/CategoryTabs'
 import { CardGrid } from './components/CardGrid'
@@ -10,6 +10,7 @@ import { useCategories } from './hooks/useCategories'
 import { useTTS, type Lang } from './hooks/useTTS'
 import { useAppTitle } from './hooks/useAppTitle'
 import { useMediaQuery } from './hooks/useMediaQuery'
+import { trackPageView, trackEvent } from './lib/analytics'
 
 export default function App() {
   const [lang, setLang] = useState<Lang>('ja')
@@ -37,6 +38,17 @@ export default function App() {
   const { categories, addCategory, updateCategory, deleteCategory } = useCategories()
   const { cards: allCards, addCard, updateCard, deleteCard } = useCards()
   const { speak } = useTTS(lang)
+
+  // カテゴリ切り替えを仮想ページビューとして計測
+  useEffect(() => {
+    if (selectedCategory === null) {
+      trackPageView('/', 'ことばカード – すべて')
+    } else {
+      const cat = categories.find((c) => c.id === selectedCategory)
+      const name = cat?.name ?? selectedCategory
+      trackPageView(`/category/${selectedCategory}`, `ことばカード – ${name}`)
+    }
+  }, [selectedCategory, categories])
 
   const visibleCards = selectedCategory
     ? allCards.filter((c) => c.categoryId === selectedCategory)
@@ -114,11 +126,13 @@ export default function App() {
   const handleOpenAddCard = () => {
     setEditingCard(undefined)
     setCardEditorOpen(true)
+    trackEvent('open_card_editor', { mode: 'add' })
   }
 
   const handleOpenEditCard = (card: Card) => {
     setEditingCard(card)
     setCardEditorOpen(true)
+    trackEvent('open_card_editor', { mode: 'edit' })
   }
 
   const handleSaveCard = async (data: Omit<Card, 'id' | 'order'>) => {
@@ -207,7 +221,7 @@ export default function App() {
         </div>
 
         <div className="flex-shrink-0 pr-3">
-          <Header onMenuOpen={() => setMenuOpen(true)} />
+          <Header onMenuOpen={() => { setMenuOpen(true); trackEvent('open_side_menu') }} />
         </div>
       </footer>
 
@@ -222,7 +236,7 @@ export default function App() {
         onAddCard={handleOpenAddCard}
         onEditCard={(card) => { handleOpenEditCard(card); setMenuOpen(false) }}
         onDeleteCard={handleDeleteCard}
-        onManageCategories={() => setCategoryEditorOpen(true)}
+        onManageCategories={() => { setCategoryEditorOpen(true); trackEvent('open_category_editor') }}
         onToggleLang={() => setLang((l) => (l === 'ja' ? 'en' : 'ja'))}
       />
 
