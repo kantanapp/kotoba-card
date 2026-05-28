@@ -1,0 +1,36 @@
+import type { Card } from '../hooks/useCards'
+import type { Lang } from '../hooks/useTTS'
+import { CardItem } from './CardItem'
+
+interface Props {
+  cards: Card[]
+  lang: Lang
+  activeCardId: string | null
+  onCardTap: (card: Card) => void
+}
+
+export function CardGrid({ cards, lang, activeCardId, onCardTap }: Props) {
+  if (cards.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center flex-1 gap-4 text-gray-400 py-20">
+        <span className="text-6xl">📋</span>
+        <p className="text-lg font-medium">カードがありません</p>
+        <p className="text-sm">右上のメニューからカードを追加してください</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+      {cards.map((card) => (
+        <CardItem
+          key={card.id}
+          card={card}
+          lang={lang}
+          isOpen={activeCardId === card.id}
+          onTap={onCardTap}
+        />
+      ))}
+    </div>
+  )
+}
