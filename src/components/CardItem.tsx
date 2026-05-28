@@ -5,6 +5,7 @@ interface Props {
   card: Card
   lang: Lang
   isOpen: boolean
+  slot?: 1 | 2
   onTap: (card: Card) => void
 }
 
@@ -22,9 +23,13 @@ function borderColor(id: string) {
   return PASTEL_BORDERS[sum % PASTEL_BORDERS.length]
 }
 
-export function CardItem({ card, lang, isOpen, onTap }: Props) {
+export function CardItem({ card, lang, isOpen, slot, onTap }: Props) {
   const text = lang === 'ja' ? card.textJa : (card.textEn || card.textJa)
-  const border = borderColor(card.id)
+  const border = slot === 1
+    ? 'border-sky-400'
+    : slot === 2
+    ? 'border-orange-400'
+    : borderColor(card.id)
 
   return (
     <button
@@ -32,6 +37,15 @@ export function CardItem({ card, lang, isOpen, onTap }: Props) {
       className={`relative flex flex-col rounded-2xl bg-white shadow-md border-4 ${border} overflow-hidden active:scale-95 transition-transform duration-100 focus:outline-none`}
       aria-label={text}
     >
+      {/* Slot number badge */}
+      {slot && (
+        <div className={`absolute top-2 left-2 z-10 w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-black shadow ${
+          slot === 1 ? 'bg-sky-500' : 'bg-orange-400'
+        }`}>
+          {slot === 1 ? '①' : '②'}
+        </div>
+      )}
+
       {/* Image area */}
       <div className="w-full aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
         {card.imageData ? (

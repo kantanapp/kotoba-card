@@ -4,7 +4,7 @@ interface Props {
   onMenuOpen: () => void
 }
 
-export function MenuButton({ onMenuOpen }: Props) {
+export function Header({ onMenuOpen }: Props) {
   return (
     <button
       onClick={onMenuOpen}
