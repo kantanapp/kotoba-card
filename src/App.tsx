@@ -76,16 +76,18 @@ export default function App() {
         />
       </main>
 
-      {/* Small floating menu trigger — top-right, barely noticeable */}
-      <MenuButton onMenuOpen={() => setMenuOpen(true)} />
-
-      {/* Fixed footer: category tabs only */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur border-t border-gray-100 shadow-[0_-2px_12px_rgba(0,0,0,0.06)] safe-bottom">
-        <CategoryTabs
-          categories={categories}
-          selected={selectedCategory}
-          onSelect={setSelectedCategory}
-        />
+      {/* Fixed footer: category tabs + hamburger */}
+      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur border-t border-gray-100 shadow-[0_-2px_12px_rgba(0,0,0,0.06)] safe-bottom flex items-center">
+        <div className="flex-1 min-w-0">
+          <CategoryTabs
+            categories={categories}
+            selected={selectedCategory}
+            onSelect={setSelectedCategory}
+          />
+        </div>
+        <div className="flex-shrink-0 pr-3">
+          <MenuButton onMenuOpen={() => setMenuOpen(true)} />
+        </div>
       </footer>
 
       <SideMenu
