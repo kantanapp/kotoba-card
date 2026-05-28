@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { X, Plus, FolderOpen, Globe, Pencil, Trash2, Check } from 'lucide-react'
+import { QRCodeSVG } from 'qrcode.react'
 import type { Card } from '../hooks/useCards'
 import type { Category } from '../hooks/useCategories'
 import type { Lang } from '../hooks/useTTS'
@@ -101,9 +102,12 @@ export function SideMenu({
             )}
             <p className="text-xs text-gray-400 mt-0.5">言語: {lang === 'ja' ? '日本語' : 'English'}</p>
           </div>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100 flex-shrink-0">
-            <X size={22} className="text-gray-500" />
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <QRCodeSVG value="https://kotoba-card.vercel.app" size={52} />
+            <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100">
+              <X size={22} className="text-gray-500" />
+            </button>
+          </div>
         </div>
 
         {/* Actions */}
