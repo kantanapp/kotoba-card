@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { Header } from './components/Header'
 import { CategoryTabs } from './components/CategoryTabs'
 import { CardGrid } from './components/CardGrid'
@@ -26,6 +26,11 @@ export default function App() {
   const [slot1Id, setSlot1Id] = useState<string | null>(null)
   const [slot2Id, setSlot2Id] = useState<string | null>(null)
 
+  // ページネーション
+  const PAGE_SIZE = 8
+  const [currentPage, setCurrentPage] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   const { title, setTitle } = useAppTitle()
   const { categories, addCategory, updateCategory, deleteCategory } = useCategories()
   const { cards: allCards, addCard, updateCard, deleteCard } = useCards()
@@ -34,6 +39,20 @@ export default function App() {
   const visibleCards = selectedCategory
     ? allCards.filter((c) => c.categoryId === selectedCategory)
     : allCards
+
+  const cardPages = useMemo(() => {
+    const pages: typeof visibleCards[] = []
+    for (let i = 0; i < visibleCards.length; i += PAGE_SIZE) {
+      pages.push(visibleCards.slice(i, i + PAGE_SIZE))
+    }
+    return pages.length > 0 ? pages : [[]]
+  }, [visibleCards])
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return
+    const page = Math.round(scrollRef.current.scrollLeft / scrollRef.current.clientWidth)
+    setCurrentPage(page)
+  }
 
   const getText = (card: Card) =>
     lang === 'ja' ? card.textJa : (card.textEn || card.textJa)
@@ -120,16 +139,45 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-svh bg-sky-50">
 
-      {/* Cards fill the viewport exactly — fixed height, no scroll */}
-      <main className="h-[calc(100svh-60px)] overflow-hidden">
-        <CardGrid
-          cards={visibleCards}
-          lang={lang}
-          activeCardId={twoCardMode ? null : activeCardId}
-          slot1Id={twoCardMode ? slot1Id : null}
-          slot2Id={twoCardMode ? slot2Id : null}
-          onCardTap={handleCardTap}
-        />
+      {/* Pages: horizontal scroll snap */}
+      <main className="h-[calc(100svh-60px)] overflow-hidden relative">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex h-full overflow-x-scroll"
+          style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        >
+          {cardPages.map((pageCards, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-full h-full"
+              style={{ scrollSnapAlign: 'start' }}
+            >
+              <CardGrid
+                cards={pageCards}
+                lang={lang}
+                activeCardId={twoCardMode ? null : activeCardId}
+                slot1Id={twoCardMode ? slot1Id : null}
+                slot2Id={twoCardMode ? slot2Id : null}
+                onCardTap={handleCardTap}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* ページドット */}
+        {cardPages.length > 1 && (
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 pointer-events-none">
+            {cardPages.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                  i === currentPage ? 'bg-sky-500' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </main>
 
       {/* Fixed footer: 2枚トグル + カテゴリタブ + ハンバーガー */}
