@@ -8,6 +8,7 @@ import { CategoryEditor } from './components/CategoryEditor'
 import { useCards, type Card } from './hooks/useCards'
 import { useCategories } from './hooks/useCategories'
 import { useTTS, type Lang } from './hooks/useTTS'
+import { useAppTitle } from './hooks/useAppTitle'
 
 export default function App() {
   const [lang, setLang] = useState<Lang>('ja')
@@ -18,6 +19,7 @@ export default function App() {
   const [editingCard, setEditingCard] = useState<Card | undefined>(undefined)
   const [categoryEditorOpen, setCategoryEditorOpen] = useState(false)
 
+  const { title, setTitle } = useAppTitle()
   const { categories, addCategory, updateCategory, deleteCategory } = useCategories()
   const { cards: allCards, addCard, updateCard, deleteCard } = useCards()
   const { speak } = useTTS(lang)
@@ -92,10 +94,12 @@ export default function App() {
 
       <SideMenu
         isOpen={menuOpen}
+        title={title}
         cards={allCards}
         categories={categories}
         lang={lang}
         onClose={() => setMenuOpen(false)}
+        onTitleChange={setTitle}
         onAddCard={handleOpenAddCard}
         onEditCard={(card) => { handleOpenEditCard(card); setMenuOpen(false) }}
         onDeleteCard={handleDeleteCard}
