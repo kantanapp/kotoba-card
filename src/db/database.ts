@@ -69,6 +69,24 @@ class KotobaCardDB extends Dexie {
         await seedSampleCards(tx.table('categories'), tx.table('cards'))
       }
     })
+    // v3: fix category order — さんぷる(0) たべもの(1) きもち(2) こうどう(3)
+    this.version(3).stores({
+      categories: 'id, order',
+      cards: 'id, categoryId, order',
+    }).upgrade(async (tx: Transaction) => {
+      const orderMap: Record<string, number> = {
+        'さんぷる': 0,
+        'たべもの': 1,
+        'きもち': 2,
+        'こうどう': 3,
+      }
+      const cats = await tx.table('categories').toArray()
+      for (const cat of cats) {
+        if (cat.name in orderMap) {
+          await tx.table('categories').update(cat.id, { order: orderMap[cat.name] })
+        }
+      }
+    })
   }
 }
 
