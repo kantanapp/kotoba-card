@@ -30,8 +30,8 @@ export function CardGrid({ cards, lang, activeCardId, slot1Id, slot2Id, onCardTa
 
   return (
     <div
-      className="grid grid-cols-2 gap-3 p-3 h-full"
-      style={{ gridTemplateRows: 'repeat(4, 1fr)' }}
+      className="grid grid-cols-4 gap-3 p-3 h-full"
+      style={{ gridTemplateRows: 'repeat(2, 1fr)' }}
     >
       {cards.map((card) => (
         <CardItem
