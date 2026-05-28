@@ -49,7 +49,10 @@ export function SideMenu({
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h2 className="text-lg font-bold text-gray-800">メニュー</h2>
+          <div>
+            <h1 className="text-xl font-bold text-sky-600 tracking-wide">ことばカード</h1>
+            <p className="text-xs text-gray-400 mt-0.5">言語: {lang === 'ja' ? '日本語' : 'English'}</p>
+          </div>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100">
             <X size={22} className="text-gray-500" />
           </button>

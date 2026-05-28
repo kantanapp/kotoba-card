@@ -8,7 +8,7 @@ interface Props {
 
 export function CategoryTabs({ categories, selected, onSelect }: Props) {
   return (
-    <div className="flex gap-2 overflow-x-auto px-4 py-3 bg-white border-b border-gray-100 scrollbar-hide">
+    <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide">
       <Tab label="すべて" active={selected === null} onClick={() => onSelect(null)} />
       {categories.map((cat) => (
         <Tab
@@ -29,7 +29,7 @@ function Tab({ label, active, onClick }: { label: string; active: boolean; onCli
       className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all ${
         active
           ? 'bg-sky-500 text-white shadow-md'
-          : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:bg-gray-300'
+          : 'bg-white/80 text-gray-600 hover:bg-gray-100 active:bg-gray-200'
       }`}
     >
       {label}

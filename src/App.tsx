@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Header } from './components/Header'
+import { MenuButton } from './components/Header'
 import { CategoryTabs } from './components/CategoryTabs'
 import { CardGrid } from './components/CardGrid'
 import { SideMenu } from './components/SideMenu'
@@ -62,17 +62,12 @@ export default function App() {
     }
   }
 
+  // Footer height: category tabs (~52px) + safe area
   return (
     <div className="flex flex-col min-h-svh bg-sky-50">
-      <Header lang={lang} onMenuOpen={() => setMenuOpen(true)} />
 
-      <CategoryTabs
-        categories={categories}
-        selected={selectedCategory}
-        onSelect={setSelectedCategory}
-      />
-
-      <main className="flex-1">
+      {/* Cards fill the viewport — footer padding prevents overlap */}
+      <main className="flex-1 pb-[60px]">
         <CardGrid
           cards={visibleCards}
           lang={lang}
@@ -80,6 +75,18 @@ export default function App() {
           onCardTap={handleCardTap}
         />
       </main>
+
+      {/* Small floating menu trigger — top-right, barely noticeable */}
+      <MenuButton onMenuOpen={() => setMenuOpen(true)} />
+
+      {/* Fixed footer: category tabs only */}
+      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur border-t border-gray-100 shadow-[0_-2px_12px_rgba(0,0,0,0.06)] safe-bottom">
+        <CategoryTabs
+          categories={categories}
+          selected={selectedCategory}
+          onSelect={setSelectedCategory}
+        />
+      </footer>
 
       <SideMenu
         isOpen={menuOpen}
