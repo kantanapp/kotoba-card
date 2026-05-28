@@ -144,7 +144,7 @@ export default function App() {
                 : 'bg-gray-100 text-gray-500'
             }`}
           >
-            {twoCardMode ? '①②' : '①'}
+            {twoCardMode ? '①＋②' : '①'}
           </button>
         </div>
 
